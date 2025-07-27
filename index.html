@@ -103,12 +103,12 @@
                         <ul class="space-y-2 text-neutral-200">
                             <li><strong>Bone Meal (Pet Mince):</strong> 2000g (steamed)</li>
                             <li><strong>Chicken Head & Feet:</strong> 1000g (steamed, bones removed)</li>
-                            <li><strong>Chicken Necks:</strong> 500g (steamed, bones removed)</li>
-                            <li><strong>Montego Kibble:</strong> 500g</li>
-                            <li><strong>Chicken Gizzards:</strong> 300g (steamed)</li>
-                            <li><strong>Canned Sardines:</strong> 250g (in water)</li>
+                            <li><strong>Chicken Necks:</strong> 250g (steamed, bones removed)</li>
+                            <li><strong>Chicken Gizzards:</strong> 250g (steamed)</li>
                             <li><strong>Chicken Liver:</strong> 125g (steamed)</li>
+                            <li><strong>Canned Sardines:</strong> 250g (in water)</li>
                             <li><strong>Eggs:</strong> 125g (raw)</li>
+                            <li><strong>Montego Kibble:</strong> 500g</li>
                         </ul>
                     </div>
                     <div class="inner-content-bg p-6 rounded-lg shadow-md flex flex-col items-center">
@@ -168,14 +168,14 @@
                     <div class="inner-content-bg p-6 rounded-lg shadow-md">
                         <h3 class="text-xl font-semibold mb-4 text-neutral-100">Daily Ingredients (4500g Total) 🍖</h3>
                         <ul class="space-y-2 text-neutral-200">
-                             <li><strong>Bone Meal (Pet Mince):</strong> 2000g (raw)</li>
+                            <li><strong>Bone Meal (Pet Mince):</strong> 2000g (raw)</li>
                             <li><strong>Chicken Head & Feet:</strong> 1000g (raw, with bones)</li>
-                            <li><strong>Chicken Necks:</strong> 500g (raw, with bones)</li>
-                            <li><strong>Montego Kibble:</strong> 500g</li>
-                            <li><strong>Chicken Gizzards:</strong> 300g (raw)</li>
-                            <li><strong>Canned Sardines:</strong> 250g (in water)</li>
+                            <li><strong>Chicken Necks:</strong> 250g (raw, with bones)</li>
+                            <li><strong>Chicken Gizzards:</strong> 250g (raw)</li>
                             <li><strong>Chicken Liver:</strong> 125g (raw)</li>
                             <li><strong>Eggs:</strong> 125g (raw)</li>
+                            <li><strong>Canned Sardines:</strong> 250g (in water)</li>
+                            <li><strong>Montego Kibble:</strong> 500g</li>
                         </ul>
                     </div>
                     <div class="inner-content-bg p-6 rounded-lg shadow-md flex flex-col items-center">
@@ -237,11 +237,11 @@
                         <ul class="space-y-2 text-neutral-200">
                            <li><strong>Bone Meal (Pet Mince):</strong> 2000g (raw)</li>
                             <li><strong>Chicken Head & Feet:</strong> 1000g (raw, with bones)</li>
-                            <li><strong>Chicken Gizzards:</strong> 625g (raw)</li>
+                            <li><strong>Chicken Gizzards:</strong> 500g (raw)</li>
                             <li><strong>Chicken Necks:</strong> 500g (raw, with bones)</li>
-                            <li><strong>Canned Sardines:</strong> 250g (in water)</li>
                             <li><strong>Chicken Liver:</strong> 125g (raw)</li>
                             <li><strong>Eggs:</strong> 125g (raw)</li>
+                            <li><strong>Canned Sardines:</strong> 250g (in water)</li>
                         </ul>
                     </div>
                     <div class="inner-content-bg p-6 rounded-lg shadow-md flex flex-col items-center">
@@ -303,18 +303,18 @@
         document.addEventListener('DOMContentLoaded', () => {
             const mealPlanData = {
                 'option-1': {
-                    labels: ['Bone Meal', 'Head & Feet', 'Necks', 'Kibble', 'Gizzards', 'Sardines', 'Liver', 'Eggs'],
-                    data: [2000, 1000, 500, 500, 300, 250, 125, 125],
+                    labels: ['Bone Meal', 'Head & Feet', 'Necks', 'Gizzards', 'Liver', 'Eggs', 'Sardines', 'Kibble'],
+                    data: [2000, 1000, 250, 250, 125, 125, 250, 500],
                     title: 'Steamed & Kibble Mix'
                 },
                 'option-2': {
-                    labels: ['Bone Meal', 'Head & Feet', 'Necks', 'Kibble', 'Gizzards', 'Sardines', 'Liver', 'Eggs'],
-                    data: [2000, 1000, 500, 500, 300, 250, 125, 125],
+                    labels: ['Bone Meal', 'Head & Feet', 'Necks', 'Kibble', 'Gizzards', 'Liver', 'Eggs', 'Sardines'],
+                    data: [2000, 1000, 250, 250, 125, 125, 250, 500],
                     title: 'Raw & Kibble Mix'
                 },
                 'option-3': {
-                    labels: ['Bone Meal', 'Head & Feet', 'Gizzards', 'Necks', 'Sardines', 'Liver', 'Eggs'],
-                    data: [2000, 1000, 625, 500, 250, 125, 125],
+                    labels: ['Bone Meal', 'Head & Feet', 'Gizzards', 'Necks', 'Liver', 'Eggs', 'Sardines'],
+                    data: [2000, 1000, 500, 500, 125, 125, 250],
                     title: 'Raw Only Mix'
                 }
             };
