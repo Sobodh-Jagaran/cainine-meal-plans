@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Canine Meal Plan Guide</title>
+    <!-- Chosen Palette: Vibrant Crimson & Steel Dark Theme - Pure black background, vibrant crimson reds, and sharp, metallic silver/steel grey accents. -->
+    <!-- Application Structure Plan: A tab-based single-page application is the optimal structure. It allows for direct, uncluttered comparison between the three distinct meal plans (Steamed, Raw/Kibble, Raw Only), which is the primary user task. Clicking a tab instantly displays the relevant plan's details, including a dynamic doughnut chart that visually represents the ingredient proportions. This user flow is intuitive and efficient, preventing information overload by presenting only one plan at a time while making comparison seamless. -->
+    <!-- Visualization & Content Choices: Report Info: Ingredient quantities for three meal plans. -> Goal: Compare the composition of each plan. -> Viz/Presentation Method: Dynamic Doughnut Chart (Chart.js) and structured text cards. -> Interaction: User clicks on a meal plan tab, which triggers a JS function to hide other plans and dynamically update the chart with the selected plan's data. -> Justification: A doughnut chart provides an immediate, easy-to-understand visual breakdown of ingredient ratios, which is far more effective for comparison than reading a list of numbers. Text cards organize qualitative information logically. -> Library/Method: Chart.js (Canvas-based). -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #000000; /* Pure Black Background */
+            color: #neutral-100; /* Ensuring text color remains light */
+        }
+        /* Custom styles for the new powerful crimson and steel dark theme */
+        .tab-button {
+            background-color: transparent;
+            color: #D1D5DB; /* Gray-300 for default text (brighter silver) */
+            border-color: #6B7280; /* Gray-500 for default border (darker steel) */
+        }
+        .tab-button.active {
+            background-color: #EF4444; /* Red-500 for active - more vibrant */
+            color: white;
+            border-color: #EF4444;
+        }
+        .tab-button:hover:not(.active) {
+            background-color: #DC2626; /* Red-600 for hover - more vibrant */
+            color: white;
+            border-color: #DC2626;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px; /* Max width for chart to prevent overstretching */
+            margin-left: auto;
+            margin-right: auto;
+            height: 350px; /* Fixed height for chart */
+            max-height: 400px; /* Max height for chart */
+        }
+        @media (min-width: 768px) { /* Adjust height for larger screens if needed */
+            .chart-container {
+                height: 400px;
+            }
+        }
+        /* Styling for the emoji paw print */
+        .paw-print-emoji {
+            vertical-align: middle; /* Align with text */
+        }
+
+        /* Custom background for inner content containers */
+        .inner-content-bg {
+            background-color: rgb(10, 10, 10); /* The requested dark grey */
+        }
+
+        /* Ensure no glow or border on the main container */
+        .container {
+            /* No specific border or box-shadow styles here, relying on default */
+        }
+
+        /* Ensure no text shadow for the paw print */
+        /* .paw-print-glow class removed from HTML and its style removed here */
+    </style>
+</head>
+<body>
+
+    <div class="container mx-auto p-4 md:p-8 max-w-7xl"> 
+        
+        <header class="text-center mb-8">
+            <h1 class="text-4xl md:text-5xl font-bold text-red-600">
+                <!-- Emoji for the paw print icon with Tailwind styling -->
+                <span class="paw-print-emoji text-neutral-200 text-5xl">🐾</span> Canine Meal Plan Guide <span class="paw-print-emoji text-neutral-200 text-5xl">🐾</span>
+            </h1>
+            <p class="text-lg text-neutral-300 mt-2">This guide presents three distinct meal plan options for five dogs (2 Male Rottweilers (50kg - 55kg), 2 Female Rottweilers (40kg - 45kg), 1 Female Pit-bull (25kg-28kg)), all aimed at a total of 4500 grams of food per day (excluding negligible supplement weight), with one option having slightly more.</p>
+        </header>
+
+        <nav class="flex justify-center mb-8 space-x-2 md:space-x-4" id="tab-navigation">
+            <button data-target="option-1" class="tab-button active text-sm md:text-base font-semibold py-2 px-4 border-2 rounded-full transition-all duration-300">
+                1. Steamed & Kibble
+            </button>
+            <button data-target="option-2" class="tab-button text-sm md:text-base font-semibold py-2 px-4 border-2 rounded-full transition-all duration-300">
+                2. Raw & Kibble
+            </button>
+            <button data-target="option-3" class="tab-button text-sm md:text-base font-semibold py-2 px-4 border-2 rounded-full transition-all duration-300">
+                3. Raw Only
+            </button>
+        </nav>
+
+        <main>
+            <!-- Option 1: Steamed Meat Mix & Kibble -->
+            <div id="option-1" class="meal-option space-y-6">
+                <div class="inner-content-bg p-6 rounded-lg shadow-md">
+                    <h2 class="text-2xl font-bold text-red-500 mb-3">Option 1: Steamed Meat Mix & Kibble 🍲</h2>
+                    <p class="text-neutral-200">This plan focuses on maximizing safety and digestibility by steaming all meat components and removing bones. The inclusion of kibble ensures a complete nutritional baseline, making it a cautious and balanced approach to mixed feeding.</p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div class="inner-content-bg p-6 rounded-lg shadow-md">
+                        <h3 class="text-xl font-semibold mb-4 text-neutral-100">Daily Ingredients & Quantities (Total: 4500g) 🥩</h3>
+                        <ul class="space-y-2 text-neutral-200">
+                            <li><strong>Bone Meal (Pet Mince):</strong> 2000g (steamed)</li>
+                            <li><strong>Chicken Head & Feet:</strong> 1000g (steamed, bones removed)</li>
+                            <li><strong>Chicken Necks:</strong> 500g (steamed, bones removed)</li>
+                            <li><strong>Montego Kibble:</strong> 500g</li>
+                            <li><strong>Chicken Gizzards:</strong> 300g (steamed)</li>
+                            <li><strong>Canned Sardines:</strong> 250g (in water)</li>
+                            <li><strong>Chicken Liver:</strong> 125g (steamed)</li>
+                            <li><strong>Eggs:</strong> 125g (raw)</li>
+                        </ul>
+                    </div>
+                    <div class="inner-content-bg p-6 rounded-lg shadow-md flex flex-col items-center">
+                        <h3 class="text-xl font-semibold mb-4 text-neutral-100">Ingredient Proportions 📊</h3>
+                        <div class="chart-container w-full max-w-sm h-64 md:h-80 mx-auto">
+                            <canvas id="chart1"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="inner-content-bg p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-semibold mb-4 text-neutral-100">Supplements & Additives</h3>
+                    <ul class="space-y-3 text-neutral-200">
+                        <li><strong>Turmeric Powder (Organic, Human-Grade):</strong> Approximately 1 teaspoon total, divided among all dogs.
+                            <span class="text-sm text-neutral-300 italic">Note: Introduce gradually (e.g., 1/4 teaspoon total initially), mixed with fat like coconut oil for better absorption.</span></li>
+                        <li><strong>Organic Virgin Coconut Oil (Cold-Pressed):</strong> Approximately 1-2 tablespoons total, divided among all dogs.
+                            <span class="text-sm text-neutral-300 italic">Note: Introduce very gradually over several weeks, starting with small amounts (e.g., 1 teaspoon total initially) to avoid digestive upset. High in calories; monitor weight.</span></li>
+                        <li><strong>Organic Food-Grade Diatomaceous Earth:</strong> Approximately 4 tablespoons + 1 teaspoon total, divided among all dogs.
+                            <span class="text-sm text-neutral-300 italic">For each Male Rottweiler (approx. >25kg): 1 tablespoon per day. For each Female Rottweiler (approx. >25kg): 1 tablespoon per day. For the Female Pitbull (approx. <25kg): 1 teaspoon per day. Note: Introduce gradually over 7 days. Ensure it is FOOD-GRADE. Avoid inhalation.</span></li>
+                    </ul>
+                </div>
+
+                <div class="inner-content-bg p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-semibold mb-4 text-neutral-100">Daily Portions Per Dog 🍽️</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
+                        <div>
+                            <p class="font-bold text-lg text-neutral-100">Male Rottweiler 🐕</p>
+                            <p class="text-red-500 text-2xl font-mono">1100g</p>
+                            <p class="text-sm text-neutral-300">(11 scoops)</p>
+                        </div>
+                        <div>
+                            <p class="font-bold text-lg text-neutral-100">Female Rottweiler 🐕</p>
+                            <p class="text-red-500 text-2xl font-mono">800g</p>
+                            <p class="text-sm text-neutral-300">(8 scoops)</p>
+                        </div>
+                        <div>
+                            <p class="font-bold text-lg text-neutral-100">Female Pitbull 🐶</p>
+                            <p class="text-red-500 text-2xl font-mono">600g</p>
+                            <p class="text-sm text-neutral-300">(6 scoops)</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-red-900 border-l-4 border-red-500 text-red-300 p-4 rounded-md" role="alert">
+                    <p class="font-bold">Critical Note on Bone Content ⚠️</p>
+                    <p>With steaming, all bones from chicken parts MUST be removed and discarded. This significantly reduces calcium. A veterinarian or veterinary nutritionist must be consulted to recommend a specific calcium supplement to balance this diet.</p>
+                </div>
+            </div>
+
+            <!-- Option 2: Raw Meat Mix & Kibble -->
+            <div id="option-2" class="meal-option hidden space-y-6">
+                <div class="inner-content-bg p-6 rounded-lg shadow-md">
+                    <h2 class="text-2xl font-bold text-red-500 mb-3">Option 2: Raw Meat Mix & Kibble 🥩</h2>
+                    <p class="text-neutral-200">This plan provides the benefits of raw feeding, including natural enzymes and nutrients from uncooked meat and bones, while using kibble as a convenient and balanced nutritional foundation. It's a hybrid approach for owners comfortable with handling raw ingredients.</p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div class="inner-content-bg p-6 rounded-lg shadow-md">
+                        <h3 class="text-xl font-semibold mb-4 text-neutral-100">Daily Ingredients (4500g Total) 🍖</h3>
+                        <ul class="space-y-2 text-neutral-200">
+                             <li><strong>Bone Meal (Pet Mince):</strong> 2000g (raw)</li>
+                            <li><strong>Chicken Head & Feet:</strong> 1000g (raw, with bones)</li>
+                            <li><strong>Chicken Necks:</strong> 500g (raw, with bones)</li>
+                            <li><strong>Montego Kibble:</strong> 500g</li>
+                            <li><strong>Chicken Gizzards:</strong> 300g (raw)</li>
+                            <li><strong>Canned Sardines:</strong> 250g (in water)</li>
+                            <li><strong>Chicken Liver:</strong> 125g (raw)</li>
+                            <li><strong>Eggs:</strong> 125g (raw)</li>
+                        </ul>
+                    </div>
+                    <div class="inner-content-bg p-6 rounded-lg shadow-md flex flex-col items-center">
+                        <h3 class="text-xl font-semibold mb-4 text-neutral-100">Ingredient Proportions 📊</h3>
+                        <div class="chart-container w-full max-w-sm h-64 md:h-80 mx-auto">
+                            <canvas id="chart2"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="inner-content-bg p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-semibold mb-4 text-neutral-100">Supplements & Additives</h3>
+                    <ul class="space-y-3 text-neutral-200">
+                        <li><strong>Turmeric Powder (Organic, Human-Grade):</strong> Approximately 1 teaspoon total, divided among all dogs.
+                            <span class="text-sm text-neutral-300 italic">Note: Introduce gradually (e.g., 1/4 teaspoon total initially), mixed with fat like coconut oil for better absorption.</span></li>
+                        <li><strong>Organic Virgin Coconut Oil (Cold-Pressed):</strong> Approximately 1-2 tablespoons total, divided among all dogs.
+                            <span class="text-sm text-neutral-300 italic">Note: Introduce very gradually over several weeks, starting with small amounts (e.g., 1 teaspoon total initially) to avoid digestive upset. High in calories; monitor weight.</span></li>
+                        <li><strong>Organic Food-Grade Diatomaceous Earth:</strong> Approximately 4 tablespoons + 1 teaspoon total, divided among all dogs.
+                            <span class="text-sm text-neutral-300 italic">For each Male Rottweiler (approx. >25kg): 1 tablespoon per day. For each Female Rottweiler (approx. >25kg): 1 tablespoon per day. For the Female Pitbull (approx. <25kg): 1 teaspoon per day. Note: Introduce gradually over 7 days. Ensure it is FOOD-GRADE. Avoid inhalation.</span></li>
+                    </ul>
+                </div>
+
+                <div class="inner-content-bg p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-semibold mb-4 text-neutral-100">Daily Portions Per Dog 🍽️</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
+                        <div>
+                            <p class="font-bold text-lg text-neutral-100">Male Rottweiler 🐕</p>
+                            <p class="text-red-500 text-2xl font-mono">1100g</p>
+                            <p class="text-sm text-neutral-300">(11 scoops)</p>
+                        </div>
+                        <div>
+                            <p class="font-bold text-lg text-neutral-100">Female Rottweiler 🐕</p>
+                            <p class="text-red-500 text-2xl font-mono">800g</p>
+                            <p class="text-sm text-neutral-300">(8 scoops)</p>
+                        </div>
+                        <div>
+                            <p class="font-bold text-lg text-neutral-100">Female Pitbull 🐶</p>
+                            <p class="text-red-500 text-2xl font-mono">600g</p>
+                            <p class="text-sm text-neutral-300">(6 scoops)</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-yellow-900 border-l-4 border-yellow-500 text-yellow-300 p-4 rounded-md" role="alert">
+                    <p class="font-bold">Important Note on Raw Bones ⚠️</p>
+                    <p>Only use soft, edible raw bones (like poultry necks/feet). NEVER feed cooked bones. Proper sizing is critical to prevent choking. Always supervise dogs when they are eating bones.</p>
+                </div>
+            </div>
+
+            <!-- Option 3: Raw Only -->
+            <div id="option-3" class="meal-option hidden space-y-6">
+                <div class="inner-content-bg p-6 rounded-lg shadow-md">
+                    <h2 class="text-2xl font-bold text-red-500 mb-3">Option 3: Raw Only 🥩</h2>
+                    <p class="text-neutral-200">This plan is a fully raw diet, eliminating all processed kibble. It aims to provide nutrition in its most natural state, relying on a careful balance of muscle meat, edible bones, and organs to meet all of a dog's dietary needs. This approach requires strict handling and balancing.</p>
+                </div>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div class="inner-content-bg p-6 rounded-lg shadow-md">
+                        <h3 class="text-xl font-semibold mb-4 text-neutral-100">Daily Ingredients (4500g Total) 🍖</h3>
+                        <ul class="space-y-2 text-neutral-200">
+                           <li><strong>Bone Meal (Pet Mince):</strong> 2000g (raw)</li>
+                            <li><strong>Chicken Head & Feet:</strong> 1000g (raw, with bones)</li>
+                            <li><strong>Chicken Gizzards:</strong> 625g (raw)</li>
+                            <li><strong>Chicken Necks:</strong> 500g (raw, with bones)</li>
+                            <li><strong>Canned Sardines:</strong> 250g (in water)</li>
+                            <li><strong>Chicken Liver:</strong> 125g (raw)</li>
+                            <li><strong>Eggs:</strong> 125g (raw)</li>
+                        </ul>
+                    </div>
+                    <div class="inner-content-bg p-6 rounded-lg shadow-md flex flex-col items-center">
+                        <h3 class="text-xl font-semibold mb-4 text-neutral-100">Ingredient Proportions 📊</h3>
+                        <div class="chart-container w-full max-w-sm h-64 md:h-80 mx-auto">
+                            <canvas id="chart3"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="inner-content-bg p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-semibold mb-4 text-neutral-100">Supplements & Additives</h3>
+                    <ul class="space-y-3 text-neutral-200">
+                        <li><strong>Turmeric Powder (Organic, Human-Grade):</strong> Approximately 1 teaspoon total, divided among all dogs.
+                            <span class="text-sm text-neutral-300 italic">Note: Introduce gradually (e.g., 1/4 teaspoon total initially), mixed with fat like coconut oil for better absorption.</span></li>
+                        <li><strong>Organic Virgin Coconut Oil (Cold-Pressed):</strong> Approximately 1-2 tablespoons total, divided among all dogs.
+                            <span class="text-sm text-neutral-300 italic">Note: Introduce very gradually over several weeks, starting with small amounts (e.g., 1 teaspoon total initially) to avoid digestive upset. High in calories; monitor weight.</span></li>
+                        <li><strong>Organic Food-Grade Diatomaceous Earth:</strong> Approximately 4 tablespoons + 1 teaspoon total, divided among all dogs.
+                            <span class="text-sm text-neutral-300 italic">For each Male Rottweiler (approx. >25kg): 1 tablespoon per day. For each Female Rottweiler (approx. >25kg): 1 tablespoon per day. For the Female Pitbull (approx. <25kg): 1 teaspoon per day. Note: Introduce gradually over 7 days. Ensure it is FOOD-GRADE. Avoid inhalation.</span></li>
+                    </ul>
+                </div>
+
+                <div class="inner-content-bg p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-semibold mb-4 text-neutral-100">Daily Portions Per Dog 🍽️</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
+                        <div>
+                            <p class="font-bold text-lg text-neutral-100">Male Rottweiler 🐕</p>
+                            <p class="text-red-500 text-2xl font-mono">1100g</p>
+                            <p class="text-sm text-neutral-300">(11 scoops)</p>
+                        </div>
+                        <div>
+                            <p class="font-bold text-lg text-neutral-100">Female Rottweiler 🐕</p>
+                            <p class="text-red-500 text-2xl font-mono">800g</p>
+                            <p class="text-sm text-neutral-300">(8 scoops)</p>
+                        </div>
+                        <div>
+                            <p class="font-bold text-lg text-neutral-100">Female Pitbull 🐶</p>
+                            <p class="text-red-500 text-2xl font-mono">600g</p>
+                            <p class="text-sm text-neutral-300">(6 scoops)</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-yellow-900 border-l-4 border-yellow-500 text-yellow-300 p-4 rounded-md" role="alert">
+                    <p class="font-bold">Important Note on Raw Bones ⚠️</p>
+                    <p>Only use soft, edible raw bones (like poultry necks/feet). NEVER feed cooked bones. Proper sizing is critical to prevent choking. Always supervise dogs when they are eating bones.</p>
+                </div>
+            </div>
+        </main>
+        
+        <footer class="mt-10 inner-content-bg p-6 rounded-lg shadow-md">
+            <h3 class="text-xl font-semibold mb-4 text-neutral-100">Important Disclaimer: 🚨</h3>
+            <p class="text-neutral-200">This meal plan guide is built on general nutritional principles. Any homemade diet, especially one involving raw or cooked meat and bone content, can significantly alter the calcium and phosphorus balance, which is crucial for canine health. Therefore, for the most precise and truly personalized dietary advice tailored to <strong>a dog's specific health conditions</strong> (e.g., allergies, sensitivities, organ disease), weight management needs, activity levels, and age, it is <strong>CRITICALLY IMPORTANT to consult a board-certified veterinary nutritionist or a primary veterinarian.</strong> They can do a detailed analysis of <strong>the exact recipe</strong>, ensure it meets all AAFCO guidelines, and provide guidance on appropriate supplementation (especially for calcium/phosphorus) and crucial monitoring for optimal health and safety.</p>
+            <p class="text-sm text-neutral-300 mt-4 text-right"><em>Guide generated on: July 27, 2025</em></p>
+        </footer>
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const mealPlanData = {
+                'option-1': {
+                    labels: ['Bone Meal', 'Head & Feet', 'Necks', 'Kibble', 'Gizzards', 'Sardines', 'Liver', 'Eggs'],
+                    data: [2000, 1000, 500, 500, 300, 250, 125, 125],
+                    title: 'Steamed & Kibble Mix'
+                },
+                'option-2': {
+                    labels: ['Bone Meal', 'Head & Feet', 'Necks', 'Kibble', 'Gizzards', 'Sardines', 'Liver', 'Eggs'],
+                    data: [2000, 1000, 500, 500, 300, 250, 125, 125],
+                    title: 'Raw & Kibble Mix'
+                },
+                'option-3': {
+                    labels: ['Bone Meal', 'Head & Feet', 'Gizzards', 'Necks', 'Sardines', 'Liver', 'Eggs'],
+                    data: [2000, 1000, 625, 500, 250, 125, 125],
+                    title: 'Raw Only Mix'
+                }
+            };
+
+            let charts = {};
+
+            function createOrUpdateChart(canvasId, data) {
+                const ctx = document.getElementById(canvasId).getContext('2d');
+                if (charts[canvasId]) {
+                    charts[canvasId].destroy();
+                }
+                charts[canvasId] = new Chart(ctx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: data.labels.map(label => {
+                            // Ensure labels are always strings, not arrays of words
+                            return label;
+                        }),
+                        datasets: [{
+                            label: 'Grams',
+                            data: data.data,
+                            backgroundColor: [
+                                '#EF4444', /* Red-500 (Vibrant Crimson) */
+                                '#DC2626', /* Red-600 */
+                                '#B91C1C', /* Red-700 */
+                                '#991B1B', /* Red-800 */
+                                '#E5E7EB', /* Neutral-200 (Brighter Silver) */
+                                '#D1D5DB', /* Neutral-300 */
+                                '#A3A3A3', /* Neutral-400 */
+                                '#737373'  /* Neutral-500 */
+                            ],
+                            borderColor: '#ffffff',
+                            borderWidth: 2,
+                            hoverOffset: 4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'right',
+                                labels: {
+                                    boxWidth: 20,
+                                    padding: 15,
+                                    font: {
+                                        size: 12,
+                                        color: '#D1D5DB' /* Neutral-300 for legend labels */
+                                    }
+                                }
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        let label = context.label || '';
+                                        if (label) {
+                                            label += ': ';
+                                        }
+                                        if (context.parsed !== null) {
+                                            label += context.raw + 'g';
+                                        }
+                                        return label;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            const tabs = document.querySelectorAll('.tab-button');
+            const mealOptions = document.querySelectorAll('.meal-option');
+
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const targetId = tab.dataset.target;
+
+                    tabs.forEach(t => {
+                        t.classList.remove('active');
+                    });
+                    tab.classList.add('active');
+
+                    mealOptions.forEach(option => {
+                        if (option.id === targetId) {
+                            option.classList.remove('hidden');
+                            createOrUpdateChart(option.querySelector('canvas').id, mealPlanData[targetId]);
+                        } else {
+                            option.classList.add('hidden');
+                        }
+                    });
+                });
+            });
+
+            createOrUpdateChart('chart1', mealPlanData['option-1']);
+        });
+    </script>
+</body>
+</html>
